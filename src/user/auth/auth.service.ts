@@ -19,7 +19,7 @@ export class AuthService {
 
     }
     async signup(
-        { name, email, password, phone }: signupParams
+        { name, email, password, phone }: signupParams,userType:UserType
     ) {
         const userExists = await this.prismaService.user.findUnique({
             where: {
@@ -34,10 +34,9 @@ export class AuthService {
                 name,
                 phone,
                 password: hashedPassword,
-                userType: UserType.BUYER
+                userType: userType
             }
         })
-        
         return await this.generateJWT(user.name, user.id)
     }
     async signin(
@@ -63,5 +62,9 @@ export class AuthService {
             expiresIn: 360000
         })
         return token
+    }
+    generateProductKey(email:string,userType:UserType){
+        const string = `${email}-${userType}-${process.env.PRODUCT_KEY_SECRET}`
+        return bcrypt.hash(string,10)
     }
 }
