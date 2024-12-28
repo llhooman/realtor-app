@@ -34,7 +34,6 @@ export class HomeController {
         return {}
     }
     @Roles(UserType.ADMIN, UserType.REALTOR)
-    @UseGuards(AuthGuard)
     @Post()
     createHome(
         @Body() body: CreateHomeDto,
